@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded;
     public float JumpWaitTime;
     private float fixedDeltaTime;
+    private float jumpCount;
 
     // Start is called before the first frame update
     void Start()
@@ -79,11 +80,16 @@ public class PlayerMovement : MonoBehaviour
         //var Move = new Vector3(m_horizontalInput, 0f, m_verticalInput);
         //gameObject.transform.Translate(Move);
         Vector3 Move = transform.right * m_horizontalInput + transform.forward * m_verticalInput;
-        CC.Move(Move*speed*Time.deltaTime);
+        CC.Move(Move.normalized*speed*Time.deltaTime);
         //rb.AddForce(Move * speed * Time.deltaTime);
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
             anim.SetTrigger("Jump");
+            StartCoroutine(WaitForJump(JumpWaitTime));
+        }
+        if (Input.GetButtonDown("Jump") && !isGrounded)
+        {
+            anim.SetTrigger("doublejump");
             StartCoroutine(WaitForJump(JumpWaitTime));
         }
         Velocity.y += gravity * Time.deltaTime;
@@ -94,11 +100,11 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(f);
         Velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
-    private void OnCollisionExit(Collision collision)
+    /*private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.tag.Equals("ground"))
         {
             anim.SetTrigger("falling");
         }
-    }
+    }*/
 }
