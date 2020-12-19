@@ -10,11 +10,12 @@ namespace DefaultNamespace
         [SerializeField] private float chaseRange = 10f;
         [SerializeField] private float attackRange = 6f;
         private NavMeshAgent _navMeshAgent;
-        private Animation _animation; 
+        private Animator _animator;
         private float _distanceToTarget = Mathf.Infinity;
         void Start()
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
+            _animator = GetComponent<Animator>();
         }
 
         void Update()
@@ -41,8 +42,8 @@ namespace DefaultNamespace
 
         void attackTarget()
         {
-            _navMeshAgent.isStopped = true;
-            print("attack");
+            _animator.Play("Attack",0,0f);
+            
         }
     }
 }
