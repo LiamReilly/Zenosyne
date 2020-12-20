@@ -41,6 +41,7 @@ public class Enemy : MonoBehaviour
             SetDestination(player.transform.position);
         }
         Vector3 worldDeltaPosition = agentNav.nextPosition - transform.position;
+        print(worldDeltaPosition);
         float dx = Vector3.Dot(transform.right, worldDeltaPosition);
         float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
         Vector2 deltaPosition = new Vector2(dx, dy);

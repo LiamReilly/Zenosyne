@@ -100,11 +100,11 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(f);
         Velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
     }
-    /*private void OnCollisionExit(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag.Equals("ground"))
+        if (other.transform.tag.Equals("enemyAttack"))
         {
-            anim.SetTrigger("falling");
+            print("player lost health");
         }
-    }*/
+    }
 }
