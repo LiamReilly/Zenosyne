@@ -4,8 +4,8 @@ using UnityEngine.AI;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DefaultNamespace
-{
+//namespace DefaultNamespace
+//{
 public class EnemyAI : MonoBehaviour
     {
         [SerializeField] private Transform target;
@@ -20,6 +20,7 @@ public class EnemyAI : MonoBehaviour
         private Rigidbody rb;
         private float xMin = -0.5f, xMax = 0.5f;
         Vector2 smoothDeltaPosition = Vector2.zero;
+        private bool dead;
         void Start()
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -31,27 +32,30 @@ public class EnemyAI : MonoBehaviour
         void Update()
         {
             _distanceToTarget = Vector3.Distance(target.position, transform.position);
-            
 
-            if (_distanceToTarget <= chaseRange && _distanceToTarget > attackRange)
+            if (!dead)
             {
-                _animator.SetBool("move", true);
-                chaseTarget();
-            }
-            else
-            {
-                _animator.SetBool("move", false);
-            }
-
-            if (_distanceToTarget <= attackRange)
-            {
-                if (!_attacking)
+                if (_distanceToTarget <= chaseRange && _distanceToTarget > attackRange)
                 {
-                    attackTarget();
-                    _attacking = true;
+                    _animator.SetBool("move", true);
+                    chaseTarget();
                 }
-                
+                else
+                {
+                    _animator.SetBool("move", false);
+                }
+
+                if (_distanceToTarget <= attackRange)
+                {
+                    if (!_attacking)
+                    {
+                         attackTarget();
+                         _attacking = true;
+                    }
+
             }
+        }
+            
 
         }
 
@@ -73,6 +77,18 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(f);
             _attacking = false;
     }
+    public void Die()
+    {
+        if (!dead)
+        {
+            _animator.SetTrigger("die");
+            _navMeshAgent.SetDestination(transform.position);
+            _navMeshAgent.updatePosition = false;
+            _animator.SetBool("move", false);
+            dead = true;
+        }
+
+    }
 }
     
-}
+//}

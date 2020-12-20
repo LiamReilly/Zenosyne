@@ -37,7 +37,7 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 3496558764041974dad66a6ed7a6a472,
+    m_Motion: {fileID: -203655887218126122, guid: 8f4bf61f8ce8e3c42b494c196e267b3d,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0.5, y: 0}
@@ -46,7 +46,7 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: b8c0ca9796bd35f47a2bc5e29ff5d013,
+    m_Motion: {fileID: -203655887218126122, guid: 1427042bb8a548d4884cfae3826d25de,
       type: 3}
     m_Threshold: 0.25
     m_Position: {x: 0, y: 0.5}
@@ -55,7 +55,7 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 46e65c4a5e9cbe14b9c3333be94b7558,
+    m_Motion: {fileID: -203655887218126122, guid: 1266585e3a0575b49abad457143b8492,
       type: 3}
     m_Threshold: 0.5
     m_Position: {x: -0.5, y: 0}
@@ -64,7 +64,7 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 7e445139c4930184fa7162e5605bf963,
+    m_Motion: {fileID: -203655887218126122, guid: bc9447aa5d28d484aac533cf6055a75c,
       type: 3}
     m_Threshold: 0.75
     m_Position: {x: 0, y: -0.5}
@@ -73,7 +73,7 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 9b0f90c49281b744086c96ba3c00a222,
+    m_Motion: {fileID: -203655887218126122, guid: 5a169f15910fff2489a43b0f53cf0909,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
@@ -228,37 +228,37 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: vely
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Jump
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: fallen
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: falling
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: doublejump
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
