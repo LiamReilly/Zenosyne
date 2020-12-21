@@ -30,6 +30,10 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip[] clips;
 
+    public HealthBar PlayerHealth;
+    private bool dead = false;
+    public GameObject DeathMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!dead)
         GetInput();
         Movement();
         
@@ -76,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
             anim.SetFloat("vely", m_verticalInput);
             anim.SetFloat("velx", m_horizontalInput);
         }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        /*if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Time.timeScale = 0.5f;
             speed *= 2;
@@ -90,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
             gravity *= 0.5f;
             anim.speed *= 0.5f;
         }
-        Time.fixedDeltaTime = this.fixedDeltaTime * Time.timeScale;
+        Time.fixedDeltaTime = this.fixedDeltaTime * Time.timeScale;*/
     }
     private void Movement()
     {
@@ -130,21 +135,37 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.tag.Equals("enemyAttack"))
+        if (!dead)
         {
-            print("player lost health");
+            if (other.transform.tag.Equals("enemyAttack"))
+            {
+                print("player lost health");
+                PlayerHealth.ChangeHealth(-25f);
+                if (PlayerHealth.GetValue() < 1)
+                {
+                    anim.SetTrigger("die");
+                    dead = true;
+                    Camera.GetComponent<ShoulderCam>().ChangeDead();
+                    DeathMenu.SetActive(true);
+                    Camera.GetComponent<ShoulderCam>().crossHairObject.SetActive(false);
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+            }
+            if (other.transform.tag.Equals("ammopower"))
+            {
+                Destroy(other.gameObject);
+                Camera.GetComponent<ShoulderCam>().ammoCapacity += Camera.GetComponent<ShoulderCam>().originalMagazineSize;
+                Camera.GetComponent<ShoulderCam>().ammoLeft.text = Camera.GetComponent<ShoulderCam>().ammoCapacity.ToString();
+            }
+            if (other.transform.tag.Equals("heart"))
+            {
+                Destroy(other.gameObject);
+                PlayerHealth.ChangeHealth(25f);
+                print("gained health");
+            }
         }
-        if (other.transform.tag.Equals("ammopower"))
-        {
-            Destroy(other.gameObject);
-            Camera.GetComponent<ShoulderCam>().ammoCapacity += Camera.GetComponent<ShoulderCam>().originalMagazineSize;
-            Camera.GetComponent<ShoulderCam>().ammoLeft.text = Camera.GetComponent<ShoulderCam>().ammoCapacity.ToString();
-        }
-        if (other.transform.tag.Equals("heart"))
-        {
-            Destroy(other.gameObject);
-            print("gained health");
-        }
+        
 
     }
     /*private void OnCollisionEnter(Collision collision)

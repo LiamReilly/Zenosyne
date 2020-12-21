@@ -1922,6 +1922,7 @@ MonoBehaviour:
   - {fileID: 2204846897960291157, guid: b222997ace061f04b993d83c523af919, type: 3}
   - {fileID: 5760063189338500115, guid: ae298bdda6e43ac44b49cae76a51b115, type: 3}
   health: 2
+  attackHitBox: {fileID: 2233421879784292600}
 --- !u!195 &2233421879758114750
 NavMeshAgent:
   m_ObjectHideFlags: 0

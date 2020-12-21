@@ -29,6 +29,7 @@ public class ShoulderCam : MonoBehaviour
     public GameObject crossHairObject;
     private Animator crossAnim;
     public Text noAmmo;
+    private bool dead = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,57 +47,61 @@ public class ShoulderCam : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X")*mouseSensitivity*Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        playerBody.Rotate(Vector3.up * mouseX);
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, cameraClampLow, cameraClampHigh);
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        if (Input.GetMouseButtonDown(0)&&canShoot&&magazineSize>0)
+        if (!dead)
         {
-            ShootWithRaycast();
-            gunSound.clip = clips[0];
-            gunSound.Play();
-            canShoot = false;
-            StartCoroutine(pauseFire(1f));
-            magazineSize-= 4;
-            bulletsInMag.text = magazineSize.ToString();
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+            playerBody.Rotate(Vector3.up * mouseX);
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, cameraClampLow, cameraClampHigh);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            if (Input.GetMouseButtonDown(0) && canShoot && magazineSize > 0)
+            {
+                ShootWithRaycast();
+                gunSound.clip = clips[0];
+                gunSound.Play();
+                canShoot = false;
+                StartCoroutine(pauseFire(1f));
+                magazineSize -= 4;
+                bulletsInMag.text = magazineSize.ToString();
+            }
+            /*if(Input.GetMouseButtonDown(0) && magazineSize <= 0 && !reloading&&ammoCapacity>0)
+            {
+                gunSound.clip = clips[1];
+                gunSound.Play();
+                reloading = true;
+                reloadText.enabled = false;
+                crossHair.enabled = true;
+                crossAnim.SetTrigger("reload");
+                StartCoroutine(reload(3f));
+            }*/
+            if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCapacity > 0 && magazineSize != originalMagazineSize)
+            {
+                gunSound.clip = clips[1];
+                gunSound.Play();
+                reloading = true;
+                reloadText.enabled = false;
+                crossHair.enabled = true;
+                crossAnim.SetTrigger("reload");
+                if (magazineSize > 0) ammoCapacity += magazineSize;
+                StartCoroutine(reload(3f));
+            }
+            if (magazineSize < 1 && !reloading && ammoCapacity > 0)
+            {
+                crossHair.enabled = false;
+                reloadText.enabled = true;
+            }
+            if (ammoCapacity < 1 && magazineSize < 1)
+            {
+                crossHair.enabled = false;
+                noAmmo.enabled = true;
+            }
+            else
+            {
+                noAmmo.enabled = false;
+            }
         }
-        /*if(Input.GetMouseButtonDown(0) && magazineSize <= 0 && !reloading&&ammoCapacity>0)
-        {
-            gunSound.clip = clips[1];
-            gunSound.Play();
-            reloading = true;
-            reloadText.enabled = false;
-            crossHair.enabled = true;
-            crossAnim.SetTrigger("reload");
-            StartCoroutine(reload(3f));
-        }*/
-        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCapacity > 0 && magazineSize!=originalMagazineSize)
-        {
-            gunSound.clip = clips[1];
-            gunSound.Play();
-            reloading = true;
-            reloadText.enabled = false;
-            crossHair.enabled = true;
-            crossAnim.SetTrigger("reload");
-            if (magazineSize > 0) ammoCapacity += magazineSize;
-            StartCoroutine(reload(3f));
-        }
-        if (magazineSize < 1&&!reloading&&ammoCapacity>0)
-        {
-            crossHair.enabled = false;
-            reloadText.enabled = true;
-        }
-        if (ammoCapacity < 1&&magazineSize<1)
-        {
-            crossHair.enabled = false;
-            noAmmo.enabled = true;
-        }
-        else
-        {
-            noAmmo.enabled = false;
-        }
+        
     }
     private void ShootWithRaycast()
     {
@@ -142,5 +147,9 @@ public class ShoulderCam : MonoBehaviour
     {
         yield return new WaitForSeconds(f);
         Destroy(obj);
+    }
+    public void ChangeDead()
+    {
+        dead = !dead;
     }
 }

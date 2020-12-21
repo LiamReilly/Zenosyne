@@ -8,7 +8,7 @@ using System.Collections.Generic;
 //{
 public class EnemyAI : MonoBehaviour
     {
-        [SerializeField] private Transform target;
+        public Transform target;
         [SerializeField] private float chaseRange = 10f;
         [SerializeField] private float attackRange = 6f;
         private NavMeshAgent _navMeshAgent;
@@ -24,6 +24,7 @@ public class EnemyAI : MonoBehaviour
         public int powerUpChance;
         public GameObject[] powerUps;
         public int health;
+        public BoxCollider attackHitBox;
         void Start()
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -99,13 +100,19 @@ public class EnemyAI : MonoBehaviour
             _animator.SetBool("move", false);
             dead = true;
             GetComponent<CapsuleCollider>().enabled = false;
+            attackHitBox.enabled = false;
             rb.useGravity = false;
+            _navMeshAgent.enabled = false;
             var powerup = UnityEngine.Random.Range(0, powerUpChance + 1);
             if (powerup == powerUpChance - 1)
             {
                 Instantiate(powerUps[UnityEngine.Random.Range(0, 2)], new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Quaternion.identity);
             }
         }
+    }
+    public bool getDeadStatus()
+    {
+        return dead;
     }
 }
     
