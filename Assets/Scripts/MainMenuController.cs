@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -13,11 +14,16 @@ public class MainMenuController : MonoBehaviour
     public Camera cam;
     public Color hoverColor;
     public Color baseColor;
+    public GameObject StartButtons;
+    public GameObject OptionButtons;
+    private GameObject GM;
+    public InputField SensInput;
     // Start is called before the first frame update
     void Start()
     {
         CurrentParasite = Instantiate(Parasite, ParasiteStart.transform.position, Quaternion.identity);
         CurrentParasite.GetComponent<EnemyAI>().target = ParasiteGoal.transform;
+        GM = GameObject.Find("GameManager");
     }
 
     // Update is called once per frame
@@ -55,6 +61,8 @@ public class MainMenuController : MonoBehaviour
         yield return new WaitForSeconds(f);
         Destroy(obj);
     }
+
+    #region buttons
     public void ButtonHover(Text button)
     {
         button.color = hoverColor;
@@ -64,4 +72,32 @@ public class MainMenuController : MonoBehaviour
     {
         button.color = baseColor;
     }
+    public void StartGame()
+    {
+        SceneManager.LoadScene("LevelOne");
+    }
+    public void OpenOptions()
+    {
+        StartButtons.SetActive(false);
+        OptionButtons.SetActive(true);
+    }
+    public void CloseOptions()
+    {
+        OptionButtons.SetActive(false);
+        StartButtons.SetActive(true);
+    }
+    public void Quit()
+    {
+        Application.Quit();
+    }
+    public void setSens()
+    {
+        var Level = SensInput.text;
+        if(Level.Length == 0)
+        {
+            Level = "100";
+        }
+        GM.GetComponent<GameManager>().setSens(int.Parse(Level));
+    }
+    #endregion
 }
