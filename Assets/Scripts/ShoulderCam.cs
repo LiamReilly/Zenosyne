@@ -14,13 +14,32 @@ public class ShoulderCam : MonoBehaviour
     public bool canShoot = true;
     public float cameraClampLow, cameraClampHigh;
     private AudioSource gunSound;
+    public AudioClip[] clips;
     public ParticleSystem Particles;
+
+    [Header("Gun Stuff")]
+    private int magazineSize;
+    public int originalMagazineSize;
+    public int ammoCapacity;
+    private bool reloading;
+    public Text bulletsInMag;
+    public Text ammoLeft;
+    public Text reloadText;
+    private Image crossHair;
+    public GameObject crossHairObject;
+    private Animator crossAnim;
+    public Text noAmmo;
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
         gunSound = GetComponent<AudioSource>();
+        magazineSize = originalMagazineSize;
+        bulletsInMag.text = magazineSize.ToString();
+        ammoLeft.text = ammoCapacity.ToString();
+        crossAnim = crossHairObject.GetComponent<Animator>();
+        crossHair = crossHairObject.GetComponent<Image>();
         //InteractText.text = "Press E to interact";
     }
 
@@ -33,12 +52,50 @@ public class ShoulderCam : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, cameraClampLow, cameraClampHigh);
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        if (Input.GetMouseButtonDown(0)&&canShoot)
+        if (Input.GetMouseButtonDown(0)&&canShoot&&magazineSize>0)
         {
             ShootWithRaycast();
+            gunSound.clip = clips[0];
             gunSound.Play();
             canShoot = false;
             StartCoroutine(pauseFire(1f));
+            magazineSize-= 4;
+            bulletsInMag.text = magazineSize.ToString();
+        }
+        /*if(Input.GetMouseButtonDown(0) && magazineSize <= 0 && !reloading&&ammoCapacity>0)
+        {
+            gunSound.clip = clips[1];
+            gunSound.Play();
+            reloading = true;
+            reloadText.enabled = false;
+            crossHair.enabled = true;
+            crossAnim.SetTrigger("reload");
+            StartCoroutine(reload(3f));
+        }*/
+        if (Input.GetKeyDown(KeyCode.R) && !reloading && ammoCapacity > 0 && magazineSize!=originalMagazineSize)
+        {
+            gunSound.clip = clips[1];
+            gunSound.Play();
+            reloading = true;
+            reloadText.enabled = false;
+            crossHair.enabled = true;
+            crossAnim.SetTrigger("reload");
+            if (magazineSize > 0) ammoCapacity += magazineSize;
+            StartCoroutine(reload(3f));
+        }
+        if (magazineSize < 1&&!reloading&&ammoCapacity>0)
+        {
+            crossHair.enabled = false;
+            reloadText.enabled = true;
+        }
+        if (ammoCapacity < 1&&magazineSize<1)
+        {
+            crossHair.enabled = false;
+            noAmmo.enabled = true;
+        }
+        else
+        {
+            noAmmo.enabled = false;
         }
     }
     private void ShootWithRaycast()
@@ -49,7 +106,7 @@ public class ShoulderCam : MonoBehaviour
             print("target hit");
             if (hit.collider.gameObject.tag.Equals("enemy"))
             {
-                hit.collider.gameObject.GetComponent<EnemyAI>().Die();
+                hit.collider.gameObject.GetComponent<EnemyAI>().Damage();
                 var particle = Instantiate(Particles, hit.point, Quaternion.identity);
                 StartCoroutine(DestroyAfterWait(1f, particle.gameObject));
             }
@@ -59,7 +116,23 @@ public class ShoulderCam : MonoBehaviour
         }
             
     }
-
+    IEnumerator reload(float f)
+    {
+        yield return new WaitForSeconds(f);
+        if (ammoCapacity > 11)
+        {
+            magazineSize = originalMagazineSize;
+            ammoCapacity -= originalMagazineSize;
+        }
+        else
+        {
+            magazineSize = ammoCapacity;
+            ammoCapacity -= ammoCapacity;
+        }
+        reloading = false;
+        ammoLeft.text = ammoCapacity.ToString();
+        bulletsInMag.text = magazineSize.ToString();
+    }
     IEnumerator pauseFire(float f)
     {
         yield return new WaitForSeconds(f);

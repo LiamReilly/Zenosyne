@@ -21,6 +21,9 @@ public class EnemyAI : MonoBehaviour
         private float xMin = -0.5f, xMax = 0.5f;
         Vector2 smoothDeltaPosition = Vector2.zero;
         private bool dead;
+        public int powerUpChance;
+        public GameObject[] powerUps;
+        public int health;
         void Start()
         {
             _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -77,6 +80,15 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(f);
             _attacking = false;
     }
+    public void Damage()
+    {
+        health--;
+        if(health<= 0)
+        {
+            Die();
+        }
+
+    }
     public void Die()
     {
         if (!dead)
@@ -86,8 +98,14 @@ public class EnemyAI : MonoBehaviour
             _navMeshAgent.updatePosition = false;
             _animator.SetBool("move", false);
             dead = true;
+            GetComponent<CapsuleCollider>().enabled = false;
+            rb.useGravity = false;
+            var powerup = UnityEngine.Random.Range(0, powerUpChance + 1);
+            if (powerup == powerUpChance - 1)
+            {
+                Instantiate(powerUps[UnityEngine.Random.Range(0, 2)], new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Quaternion.identity);
+            }
         }
-
     }
 }
     

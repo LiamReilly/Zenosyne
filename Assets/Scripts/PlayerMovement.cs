@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     //private Rigidbody rb;
     public float jumpHeight;
     private Animator anim;
+    public GameObject Camera;
 
     public Transform groundCheck;
     public Transform animationGroundCheck;
@@ -22,7 +23,12 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded;
     public float JumpWaitTime;
     private float fixedDeltaTime;
-    private float jumpCount;
+    public float propulsionForce;
+    private float propulsionTime;
+    public float originalPropulsionTime;
+
+    private AudioSource audioSource;
+    public AudioClip[] clips;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
         CC = GetComponent<CharacterController>();
         //rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+        propulsionTime = originalPropulsionTime;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -54,11 +62,20 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && Velocity.y < 0)
         {
             Velocity.y = -2f;
+            propulsionTime = originalPropulsionTime;
         }
         m_horizontalInput = Input.GetAxis("Horizontal");
         m_verticalInput = Input.GetAxis("Vertical");
-        anim.SetFloat("vely", m_verticalInput);
-        anim.SetFloat("velx", m_horizontalInput);
+        if (!isGrounded)
+        {
+            anim.SetFloat("vely", 0f);
+            anim.SetFloat("velx", 0f);
+        }
+        else
+        {
+            anim.SetFloat("vely", m_verticalInput);
+            anim.SetFloat("velx", m_horizontalInput);
+        }
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Time.timeScale = 0.5f;
@@ -87,10 +104,21 @@ public class PlayerMovement : MonoBehaviour
             anim.SetTrigger("Jump");
             StartCoroutine(WaitForJump(JumpWaitTime));
         }
-        if (Input.GetButtonDown("Jump") && !isGrounded)
+        if (Input.GetButton("Jump") && !isGrounded && propulsionTime > 0)
         {
-            anim.SetTrigger("doublejump");
-            StartCoroutine(WaitForJump(JumpWaitTime));
+            if(audioSource.isPlaying&& audioSource.clip.name.Equals("rocket"))
+            {
+
+            }
+            else
+            {
+                audioSource.volume = 0.1f;
+                audioSource.clip = clips[0];
+                audioSource.Play();
+            }
+            Velocity.y = propulsionForce;
+            propulsionTime -= Time.deltaTime;
+            //print(propulsionTime);
         }
         Velocity.y += gravity * Time.deltaTime;
         CC.Move(Velocity * Time.deltaTime);
@@ -106,5 +134,26 @@ public class PlayerMovement : MonoBehaviour
         {
             print("player lost health");
         }
+        if (other.transform.tag.Equals("ammopower"))
+        {
+            Destroy(other.gameObject);
+            Camera.GetComponent<ShoulderCam>().ammoCapacity += Camera.GetComponent<ShoulderCam>().originalMagazineSize;
+            Camera.GetComponent<ShoulderCam>().ammoLeft.text = Camera.GetComponent<ShoulderCam>().ammoCapacity.ToString();
+        }
+        if (other.transform.tag.Equals("heart"))
+        {
+            Destroy(other.gameObject);
+            print("gained health");
+        }
+
     }
+    /*private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag.Equals("ammopower"))
+        {
+            Destroy(collision.gameObject);
+            Camera.GetComponent<ShoulderCam>().ammoCapacity += Camera.GetComponent<ShoulderCam>().originalMagazineSize;
+            Camera.GetComponent<ShoulderCam>().ammoLeft.text = Camera.GetComponent<ShoulderCam>().ammoCapacity.ToString();
+        }
+    }*/
 }
