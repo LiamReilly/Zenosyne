@@ -13,7 +13,7 @@ public class LevelOneController : MonoBehaviour
     public Transform Player;
     public Text Timer;
     public Text MessagePlayer;
-    private float TimeLeft = 120f;
+    private float TimeLeft = 5f;
     private float ParasiteInterval = 2f;
     public InputField SensInput;
     public GameObject OptionButtons;
@@ -30,14 +30,14 @@ public class LevelOneController : MonoBehaviour
     private AudioSource audioSource;
     public Color baseWhiteColor;
     private float fixedDeltaTime;
-    public GameObject barrier;
+    public GameObject barrier, lightExit;
     // Start is called before the first frame update
     void Start()
     {
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
         SC.setSens(GM.GetSens());
         Timer.text = string.Format("{0:N0}", TimeLeft);
-        MessagePlayer.text = "Survive for two minutes to move on!";
+        MessagePlayer.text = "Survive for two minutes while the door is opened!";
         MessagePlayer.gameObject.SetActive(true);
         StartCoroutine(DisableAfterTime(3f, MessagePlayer.gameObject));
         StartCoroutine(StartParasite());
@@ -144,7 +144,8 @@ public class LevelOneController : MonoBehaviour
     }
     public void EndLevel()
     {
-        MessagePlayer.text = "Escape!";
+        MessagePlayer.text = "The door is open!";
+        lightExit.SetActive(true);
         MessagePlayer.gameObject.SetActive(true);
         StartCoroutine(DisableAfterTime(3f, MessagePlayer.gameObject));
         endPlane.SetActive(false);

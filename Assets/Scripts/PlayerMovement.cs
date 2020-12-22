@@ -166,6 +166,12 @@ public class PlayerMovement : MonoBehaviour
                 PlayerHealth.ChangeHealth(25f);
                 print("gained health");
             }
+            if (other.transform.tag.Equals("vial"))
+            {
+                Destroy(other.gameObject);
+                GameObject.Find("Controller").GetComponent<LevelTwoController>().addVial();
+                print("gained vial");
+            }
         }
         
 

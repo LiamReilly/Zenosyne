@@ -16,8 +16,10 @@ public class MainMenuController : MonoBehaviour
     public Color baseColor;
     public GameObject StartButtons;
     public GameObject OptionButtons;
+    public GameObject ExpositionScreen;
     private GameObject GM;
     public InputField SensInput;
+    public bool pastMain = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,7 +48,7 @@ public class MainMenuController : MonoBehaviour
                 }
             }
         }
-        if (CurrentParasite.GetComponent<EnemyAI>().getDeadStatus())
+        if (CurrentParasite.GetComponent<EnemyAI>().getDeadStatus()&&!pastMain)
         {
             CurrentParasite = Instantiate(Parasite, ParasiteStart.transform.position, Quaternion.identity);
             CurrentParasite.GetComponent<EnemyAI>().target = ParasiteGoal.transform;
@@ -54,6 +56,7 @@ public class MainMenuController : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        if(!pastMain)
         CurrentParasite.transform.position = ParasiteStart.transform.position;
     }
     IEnumerator DestroyAfterWait(float f, GameObject obj)
@@ -74,17 +77,31 @@ public class MainMenuController : MonoBehaviour
     }
     public void StartGame()
     {
+        ExpositionScreen.SetActive(true);
+        StartButtons.SetActive(false);
+        pastMain = true;
+    }
+    public void CloseExposition()
+    {
+        ExpositionScreen.SetActive(false);
+        StartButtons.SetActive(true);
+        pastMain = false;
+    }
+    public void BeginGame()
+    {
         SceneManager.LoadScene("LevelOne");
     }
     public void OpenOptions()
     {
         StartButtons.SetActive(false);
         OptionButtons.SetActive(true);
+        pastMain = true;
     }
     public void CloseOptions()
     {
         OptionButtons.SetActive(false);
         StartButtons.SetActive(true);
+        pastMain = false;
     }
     public void Quit()
     {

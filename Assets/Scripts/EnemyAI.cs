@@ -104,9 +104,17 @@ public class EnemyAI : MonoBehaviour
             rb.useGravity = false;
             _navMeshAgent.enabled = false;
             var powerup = UnityEngine.Random.Range(0, powerUpChance + 1);
-            if (powerup == powerUpChance - 1)
+            if (powerup == powerUpChance && gameObject.name.StartsWith("Parasite"))
             {
                 Instantiate(powerUps[UnityEngine.Random.Range(0, 2)], new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Quaternion.identity);
+            }
+            if (powerup == powerUpChance && gameObject.name.StartsWith("Level2Parasite"))
+            {
+                var pu = Instantiate(powerUps[UnityEngine.Random.Range(0, 5)], new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Quaternion.identity);
+                if (pu.gameObject.name.StartsWith("vial"))
+                {
+                    pu.transform.Rotate(new Vector3(-77.413f, 0f, 0f));
+                }
             }
         }
     }

@@ -31,6 +31,7 @@ public class ShoulderCam : MonoBehaviour
     private Animator crossAnim;
     public Text noAmmo;
     private bool dead = false;
+    public ParticleSystem MuzzleFlash;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +43,7 @@ public class ShoulderCam : MonoBehaviour
         ammoLeft.text = ammoCapacity.ToString();
         crossAnim = crossHairObject.GetComponent<Animator>();
         crossHair = crossHairObject.GetComponent<Image>();
+        MuzzleFlash.Stop();
         //InteractText.text = "Press E to interact";
     }
 
@@ -106,10 +108,11 @@ public class ShoulderCam : MonoBehaviour
     }
     private void ShootWithRaycast()
     {
+        MuzzleFlash.Play();
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, bulletRange))
         {
-            print("target hit");
+            //print("target hit");
             if (hit.collider.gameObject.tag.Equals("enemy"))
             {
                 EnemiesKilled++;
@@ -157,5 +160,6 @@ public class ShoulderCam : MonoBehaviour
     public void setSens(float f)
     {
         mouseSensitivity = f;
+        
     }
 }
