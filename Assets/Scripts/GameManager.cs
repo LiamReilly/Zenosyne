@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject Options;
-    private int sens;
+    private int sens = 100;
+    private int enemiesKilled = 0;
+    private int healthLost = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,5 +35,25 @@ public class GameManager : MonoBehaviour
     {
         sens = i;
         print(sens);
+    }
+    public float GetSens()
+    {
+        return sens;
+    }
+    public void addKilled(int i)
+    {
+        enemiesKilled += i;
+    }
+    public void addHealthLost(int i)
+    {
+        healthLost += i;
+    }
+    public int GetKilled()
+    {
+        return enemiesKilled;
+    }
+    public int GetHealthLost()
+    {
+        return healthLost;
     }
 }

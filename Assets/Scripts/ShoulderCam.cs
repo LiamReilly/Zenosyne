@@ -16,6 +16,7 @@ public class ShoulderCam : MonoBehaviour
     private AudioSource gunSound;
     public AudioClip[] clips;
     public ParticleSystem Particles;
+    public int EnemiesKilled = 0;
 
     [Header("Gun Stuff")]
     private int magazineSize;
@@ -55,7 +56,7 @@ public class ShoulderCam : MonoBehaviour
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, cameraClampLow, cameraClampHigh);
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            if (Input.GetMouseButtonDown(0) && canShoot && magazineSize > 0)
+            if (Input.GetMouseButtonDown(0) && canShoot && magazineSize > 0 &&Time.timeScale != 0)
             {
                 ShootWithRaycast();
                 gunSound.clip = clips[0];
@@ -111,6 +112,7 @@ public class ShoulderCam : MonoBehaviour
             print("target hit");
             if (hit.collider.gameObject.tag.Equals("enemy"))
             {
+                EnemiesKilled++;
                 hit.collider.gameObject.GetComponent<EnemyAI>().Damage();
                 var particle = Instantiate(Particles, hit.point, Quaternion.identity);
                 StartCoroutine(DestroyAfterWait(1f, particle.gameObject));
@@ -151,5 +153,9 @@ public class ShoulderCam : MonoBehaviour
     public void ChangeDead()
     {
         dead = !dead;
+    }
+    public void setSens(float f)
+    {
+        mouseSensitivity = f;
     }
 }

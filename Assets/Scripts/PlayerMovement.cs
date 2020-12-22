@@ -31,8 +31,9 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip[] clips;
 
     public HealthBar PlayerHealth;
-    private bool dead = false;
+    public bool dead = false;
     public GameObject DeathMenu;
+    public int healthLost;
 
     // Start is called before the first frame update
     void Start()
@@ -141,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 print("player lost health");
                 PlayerHealth.ChangeHealth(-25f);
+                healthLost += 25;
                 if (PlayerHealth.GetValue() < 1)
                 {
                     anim.SetTrigger("die");
