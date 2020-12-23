@@ -32,13 +32,15 @@ public class LevelTwoController : MonoBehaviour
     private float fixedDeltaTime;
     public GameObject barrier, lightExit;
     public GameObject Exposition;
+    public bool HaveKey;
+    public Text KeyFound;
     // Start is called before the first frame update
     void Start()
     {
         GM = GameObject.Find("GameManager").GetComponent<GameManager>();
         SC.setSens(GM.GetSens());
         VialCount.text = string.Format("{0:N0}", VialsLeft) + "/5";
-        MessagePlayer.text = "Find All 5 Vials";
+        MessagePlayer.text = "Find All 5 Vials and the Key";
         MessagePlayer.gameObject.SetActive(true);
         StartCoroutine(DisableAfterTime(3f, MessagePlayer.gameObject));
         StartCoroutine(StartParasite());
@@ -57,7 +59,7 @@ public class LevelTwoController : MonoBehaviour
             Cursor.visible = true;
             paused = true;
         }
-        if(VialsLeft==5&& !end)
+        if(VialsLeft > 4&& !end && HaveKey)
         {
             end = true;
             EndLevel();
@@ -190,5 +192,10 @@ public class LevelTwoController : MonoBehaviour
         EnemiesKilled.gameObject.SetActive(false);
         HealthLost.gameObject.SetActive(false);
         ContinueButton.SetActive(false);
+    }
+    public void FoundKey()
+    {
+        HaveKey = true;
+        KeyFound.text = "Key: Found";
     }
 }

@@ -105,7 +105,11 @@ public class PlayerMovement : MonoBehaviour
         Vector3 Move = transform.right * m_horizontalInput + transform.forward * m_verticalInput;
         CC.Move(Move.normalized*speed*Time.deltaTime);
         //rb.AddForce(Move * speed * Time.deltaTime);
-        if(Input.GetButtonDown("Jump") && isGrounded)
+
+        /* removed jumping it's not necessary to the game anymore
+         * especially in the route it's taken
+        */
+        /*if(Input.GetButtonDown("Jump") && isGrounded)
         {
             anim.SetTrigger("Jump");
             StartCoroutine(WaitForJump(JumpWaitTime));
@@ -125,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
             Velocity.y = propulsionForce;
             propulsionTime -= Time.deltaTime;
             //print(propulsionTime);
-        }
+        }*/
         Velocity.y += gravity * Time.deltaTime;
         CC.Move(Velocity * Time.deltaTime);
     }
@@ -147,6 +151,8 @@ public class PlayerMovement : MonoBehaviour
                 {
                     anim.SetTrigger("die");
                     dead = true;
+                    CC.Move(new Vector3(0f, 0f, 0f));
+                    Velocity.y = -2f;
                     Camera.GetComponent<ShoulderCam>().ChangeDead();
                     DeathMenu.SetActive(true);
                     Camera.GetComponent<ShoulderCam>().crossHairObject.SetActive(false);
@@ -172,17 +178,25 @@ public class PlayerMovement : MonoBehaviour
                 GameObject.Find("Controller").GetComponent<LevelTwoController>().addVial();
                 print("gained vial");
             }
+            if (other.transform.tag.Equals("key"))
+            {
+                Destroy(other.gameObject);
+                GameObject.Find("Controller").GetComponent<LevelTwoController>().FoundKey();
+                print("gained key");
+            }
+            if (other.transform.tag.Equals("ammobox"))
+            {
+                other.gameObject.SetActive(false);
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ShoulderCam>().fillAmmo();
+                print("filled ammo");
+                StartCoroutine(EnableAmmoBox(other.gameObject));
+            }
         }
-        
+        IEnumerator EnableAmmoBox(GameObject obj)
+        {
+            yield return new WaitForSeconds(20f);
+            obj.SetActive(true);
+        }
 
     }
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag.Equals("ammopower"))
-        {
-            Destroy(collision.gameObject);
-            Camera.GetComponent<ShoulderCam>().ammoCapacity += Camera.GetComponent<ShoulderCam>().originalMagazineSize;
-            Camera.GetComponent<ShoulderCam>().ammoLeft.text = Camera.GetComponent<ShoulderCam>().ammoCapacity.ToString();
-        }
-    }*/
 }

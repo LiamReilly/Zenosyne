@@ -3006,8 +3006,8 @@ MonoBehaviour:
     investigated for the incident, and a special task force was created with the sole
     objective of investigating this incident. The last report from an X-Lab employee
     stated that nothing survived and humanoid monsters are governing the facility.
-    You are being sent to seek and collect samples of the virus, while also looking
-    for survivors in the facility. \rGood Luck."
+    You are being sent to seek and collect samples of the virus before it's too late.
+    \rGood Luck."
 --- !u!222 &2121803525
 CanvasRenderer:
   m_ObjectHideFlags: 0

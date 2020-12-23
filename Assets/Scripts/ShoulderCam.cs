@@ -22,6 +22,7 @@ public class ShoulderCam : MonoBehaviour
     private int magazineSize;
     public int originalMagazineSize;
     public int ammoCapacity;
+    private int  BaseAmmoCapacity;
     private bool reloading;
     public Text bulletsInMag;
     public Text ammoLeft;
@@ -35,6 +36,7 @@ public class ShoulderCam : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        BaseAmmoCapacity = ammoCapacity;
         Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
         gunSound = GetComponent<AudioSource>();
@@ -161,5 +163,24 @@ public class ShoulderCam : MonoBehaviour
     {
         mouseSensitivity = f;
         
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.Equals("wall"))
+            other.gameObject.GetComponent<MeshRenderer>().enabled = false;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag.Equals("wall"))
+        other.gameObject.GetComponent<MeshRenderer>().enabled = true;
+    }
+    public void fillAmmo()
+    {
+        if (ammoCapacity < BaseAmmoCapacity) ammoCapacity = BaseAmmoCapacity + originalMagazineSize;
+        else
+        {
+            ammoCapacity = BaseAmmoCapacity;
+        }
+        ammoLeft.text = ammoCapacity.ToString();
     }
 }

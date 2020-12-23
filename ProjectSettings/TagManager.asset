@@ -11,6 +11,9 @@ TagManager:
   - ammo
   - heart
   - vial
+  - wall
+  - key
+  - ammobox
   layers:
   - Default
   - TransparentFX

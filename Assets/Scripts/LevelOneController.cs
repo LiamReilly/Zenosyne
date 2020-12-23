@@ -13,7 +13,7 @@ public class LevelOneController : MonoBehaviour
     public Transform Player;
     public Text Timer;
     public Text MessagePlayer;
-    private float TimeLeft = 5f;
+    private float TimeLeft = 120f;
     private float ParasiteInterval = 2f;
     public InputField SensInput;
     public GameObject OptionButtons;

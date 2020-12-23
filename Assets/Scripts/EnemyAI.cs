@@ -18,15 +18,17 @@ public class EnemyAI : MonoBehaviour
         private float _attackTime = 2.1f;
         Vector2 velocity = Vector2.zero;
         private Rigidbody rb;
-        private float xMin = -0.5f, xMax = 0.5f;
+        //private float xMin = -0.5f, xMax = 0.5f;
         Vector2 smoothDeltaPosition = Vector2.zero;
         private bool dead;
         public int powerUpChance;
         public GameObject[] powerUps;
         public int health;
         public BoxCollider attackHitBox;
+        public AudioSource sound;
         void Start()
         {
+            sound = GetComponent<AudioSource>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             rb = GetComponent<Rigidbody>();
@@ -94,6 +96,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (!dead)
         {
+            sound.Play();
             _animator.SetTrigger("die");
             _navMeshAgent.SetDestination(transform.position);
             _navMeshAgent.updatePosition = false;
